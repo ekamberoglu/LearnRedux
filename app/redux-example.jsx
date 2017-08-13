@@ -11,23 +11,41 @@ var reducer = (state = { name: 'Anonymous' }, action) => {
         return {
           ...state,
           name: action.name
-        }
+        };
 
       default:
         return state;
     }
 };
 
-var store = redux.createStore(reducer);
-
-var currentState = store.getState();
-console.log('currentState', currentState);
+// var store = redux.createStore(reducer, redux.compose(
+// 	window.devToolsExtension ? window.devToolsExtension() : (f) => {
+//     return f;
+//   }
+// ));
+var store = redux.createStore(reducer, redux.compose(
+	window.devToolsExtension ? window.devToolsExtension() : f => f
+));
 
 var action = {
   type: 'CHANGE_NAME',
   name: 'Ekrem'
 }
 
+var unsubscribe = store.subscribe(() => {
+  var state = store.getState();
+  console.log('Name is', state.name);
+  document.getElementById('app').innerHTML = state.name;
+});
+
+//unsubscribe();
+
 store.dispatch(action);
 
-console.log('Name should be Ekrem', store.getState());
+
+store.dispatch({
+  type: 'CHANGE_NAME',
+  name: 'Kayros'
+});
+
+//console.log('Name should be Ekrem', store.getState());
