@@ -2,15 +2,8 @@ var redux = require('redux');
 
 console.log('Starting redux example');
 
-var stateDefault = {
-  name: 'Anonymous',
-  hobbies: [],
-  movies: []
-};
-
-var nextHobbyId = 1;
-var nextMovieId = 1;
-
+// Name reducer and action generators
+// ----------------
 var nameReducer = (state = 'Anonymous', action) => {
   switch (action.type) {
     case 'CHANGE_NAME':
@@ -20,7 +13,16 @@ var nameReducer = (state = 'Anonymous', action) => {
   };
 };
 
+var changeName = (name) => {
+  return {
+    type: 'CHANGE_NAME',
+    name
+  }
+}
 
+// Hobbies reducer and action generators
+// ----------------
+var nextHobbyId = 1;
 var hobbiesReducer = (state = [], action) => {
   switch (action.type) {
     case 'ADD_HOBBY':
@@ -38,6 +40,24 @@ var hobbiesReducer = (state = [], action) => {
   };
 };
 
+var addHobby = (hobby) => {
+  return {
+    type: 'ADD_HOBBY',
+    hobby
+  };
+};
+
+var removeHobby = (id) => {
+  return {
+    type: 'REMOVE_HOBBY',
+    id
+  }
+}
+
+
+// Movies reducer and action generators
+// ----------------
+var nextMovieId = 1;
 var moviesReducer = (state = [], action) => {
   switch (action.type) {
     case 'ADD_MOVIE':
@@ -54,6 +74,21 @@ var moviesReducer = (state = [], action) => {
     default:
       return state;
   };
+};
+
+var addMovie = (title, genre) => {
+  return {
+    type: 'ADD_MOVIE',
+    title,
+    genre
+  };
+};
+
+var removeMovie = (id) => {
+  return {
+    type: 'REMOVE_MOVIE',
+    id
+  }
 };
 
 var reducer = redux.combineReducers({
@@ -73,7 +108,6 @@ var store = redux.createStore(reducer, redux.compose(
 
 var unsubscribe = store.subscribe(() => {
   var state = store.getState();
-  //console.log('Name is', state.name);
   document.getElementById('app').innerHTML = state.name;
 
   console.log('New state', store.getState());
@@ -81,44 +115,23 @@ var unsubscribe = store.subscribe(() => {
 
 //unsubscribe();
 
-store.dispatch({
-  type: 'CHANGE_NAME',
-  name: 'Ekrem'
-});
+store.dispatch(changeName('Ekrem'));
+// store.dispatch({
+//   type: 'CHANGE_NAME',
+//   name: 'Ekrem'
+// });
 
-store.dispatch({
-  type: 'ADD_HOBBY',
-  hobby: 'Running'
-});
+store.dispatch(addHobby('Running'));
+// store.dispatch({
+//   type: 'ADD_HOBBY',
+//   hobby: 'Running'
+// });
 
-store.dispatch({
-  type: 'ADD_HOBBY',
-  hobby: 'Swimming'
-});
+store.dispatch(addHobby('Swimming'));
+store.dispatch(removeHobby(2));
 
-store.dispatch({
-  type: 'REMOVE_HOBBY',
-  id: 2
-});
+store.dispatch(changeName('Kayros'));
 
-store.dispatch({
-  type: 'CHANGE_NAME',
-  name: 'Kayros'
-});
-
-store.dispatch({
-  type: 'ADD_MOVIE',
-  title: 'Mad Max',
-  genre: 'Action'
-});
-
-store.dispatch({
-  type: 'ADD_MOVIE',
-  title: 'Summer',
-  genre: 'Romantic'
-});
-
-store.dispatch({
-  type: 'REMOVE_MOVIE',
-  id: 1
-});
+store.dispatch(addMovie('Mad Max', 'Action'));
+store.dispatch(addMovie('Summer', 'Romantic'));
+store.dispatch(removeMovie(1));
